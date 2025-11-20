@@ -1,9 +1,10 @@
-Embodied-Qwen-Agent/
-├── assets/              # 存放运行过程中的截图、日志
-├── core/                # 核心代码库
-│   ├── __init__.py
-│   ├── perception.py    # [今日任务] 视觉感知模块 (眼睛)
-│   └── navigation.py    # [后续] AI2-THOR 环境控制模块 (身体)
-├── main.py              # [后续] 主程序入口 (大脑)
-├── requirements.txt     # [今日任务] 依赖管理
-└── README.md            # 项目说明书
+```
+VLN-Qwen/
+├── assets/              # 运行过程中的视觉快照 (Step-by-step screenshots)
+├── core/
+│   ├── bot_eyes.py      # [Vision] VLM 交互接口，处理 Prompt 与图像推理
+│   └── bot_body.py      # [Control] AI2-THOR 环境封装，处理动作空间
+├── main.py              # [Planner] 主程序，包含 CoT 思维链与决策循环
+├── requirements.txt     # 项目依赖
+└── README.md            # 项目文档
+```
