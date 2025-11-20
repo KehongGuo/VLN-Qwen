@@ -1,0 +1,5 @@
+ai2thor==5.0.0
+ollama
+pillow
+numpy
+opencv-python
