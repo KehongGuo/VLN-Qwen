@@ -1,6 +1,0 @@
-# 编号, 场景ID(AI2-THOR), 友好名称, 场景类型
-1,FloorPlan10,美式开放厨房 (默认),Kitchen
-2,FloorPlan206,现代宽敞客厅,LivingRoom
-3,FloorPlan302,温馨主卧,Bedroom
-4,FloorPlan402,紧凑型浴室,Bathroom
-5,FloorPlan20,极简风格厨房,Kitchen
