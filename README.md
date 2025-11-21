@@ -5,8 +5,9 @@ VLN-Qwen/
 │   ├── bot_eyes.py      # [Vision] VLM 交互接口，处理 Prompt 与图像推理
 │   ├── bot_body.py      # [Control] AI2-THOR 环境封装，处理动作空间
 │   └── bot_memory.py    # [record] 机器人记忆，记录探索节点以供llm回溯
-├── main.py              # [Planner] 主程序，包含 CoT 思维链与决策循环
+├── main.py              
 ├── requirements.txt     
-├── scene.txt            
+├── build_map.py         # [Step1] 初步探索整个地图
+├── find_item.py         # [Step2] 根据指令寻找物品    
 └── README.md            
 ```
