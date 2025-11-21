@@ -6,12 +6,11 @@ class BotEyes:
     """
     main class for Visual Language Model (VLM) perception using Ollama service.
     """
-    def __init__(self, model_name='qwen3-vl:8b'):
+    def __init__(self, model_name='qwen3-vl:4b'):
         self.model_name = model_name
         # test connection to Ollama
         try:
             ollama.list()
-            print(f"[VLM] initialized with model: {self.model_name}")
         except Exception as e:
             print(f"[VLM] Failed to connect to Ollama service: {e}")
 
@@ -21,8 +20,6 @@ class BotEyes:
         """
         if not os.path.exists(image_path):
             return "Error: Image file not found."
-
-        print(f"[BotEyes] 正在观察并思考...")
         
         try:
             response = ollama.chat(

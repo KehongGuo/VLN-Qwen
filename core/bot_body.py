@@ -8,9 +8,7 @@ class BotBody:
     which handles movement and interaction within the scene.
     """
     def __init__(self, scene="FloorPlan10", grid_size=0.5):
-        print(f"[BotBody] is initializing...")
-        print(f"[BotBody] Loading scene: {scene}")
-        
+
         # Initialize AI2-THOR Controller    
         self.controller = Controller(
             agentMode="default",
@@ -23,7 +21,6 @@ class BotBody:
             width=600,                  
             height=600
         )
-        print("[BotBody] Controller initialized.")
 
     def move(self, action: str):
         """
@@ -31,7 +28,6 @@ class BotBody:
         Move list: "MoveAhead", "RotateRight", "RotateLeft", "LookUp", "LookDown"
         Return: (success: bool, message: str)
         """
-        print(f"[BotBody] 执行动作 -> {action}")
         
         if action == "Stop":
             return True, "Robot stopped."
