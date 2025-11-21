@@ -13,6 +13,7 @@ env/
 # assets and logs
 assets/*.png
 logs/
+*.json
 
 # VS Code Configuration
 .vscode/
