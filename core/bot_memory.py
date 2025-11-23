@@ -58,13 +58,40 @@ class MemoryBank:
             summary += f"-[Node {event['node_id']}]: {event['description']}\n"
         return summary
 
+    def fast_search(self, query):
+            """
+            [Level 1] Keyword Search
+            Checks if the query string exists directly in the description.
+            Returns: (node_id, reason) or (-1, None)
+            """
+            candidates = []
+            for event in self.history:
+                # Basic substring match (case-insensitive)
+                if query.lower() in event['description'].lower():
+                    candidates.append(event['node_id'])
+            
+            if candidates:
+                # If multiple matches, return the most closest one
+                best_node = candidates[0] 
+                return best_node, f"⚡ [Fast Match] Found exact keyword '{query}' in Node {best_node}."
+                
+            return -1, None
+
     def search(self, query, bot_eyes):
         """
-        Uses the VLM to find the target object in the memory logs.
+        [Level 2] use llm reasoning
+        1. Try Fast Search (Keyword)
+        2. If failed, use VLM Reasoning (Semantic)
         """
         if not self.history:
             return -1, "Memory is empty."
 
+        # --- Step 1: Fast Path ---
+        node_id, fast_reason = self.fast_search(query)
+        if node_id != -1:
+            return node_id, fast_reason
+        
+        # --- Step 2: Slow Path (VLM) ---
         context = self.get_memory_str()
         last_img = self.history[-1]["image_path"] # Use last image as placeholder context
         
