@@ -1,25 +1,12 @@
 import os
 import time
+import random
 from core.bot_body import BotBody
 from core.bot_eyes import BotEyes
 from core.bot_memory import MemoryBank
 
 SCENE_ID = "FloorPlan10"  # ai2-thor scene ID
 SAVE_FILE = "memory.json" # final output - the environment database (simillar to a topological map)
-
-
-EXPLORATION_ROUTINE = [
-    "Start",       
-    "RotateRight", 
-    "RotateRight", 
-    "RotateRight",  
-    "RotateRight",
-    "MoveAhead",   
-    "RotateRight", 
-    "MoveAhead",   
-    "RotateLeft",  
-    "RotateLeft",  
-]
 
 MAX_EXPLORE_STEPS = 12
 
@@ -61,52 +48,46 @@ def run_scan():
         print("  > deleted existing memory file.")
 
     # initial bot components
-    body = BotBody(scene=SCENE_ID, grid_size=0.5)
+    body = BotBody(scene=SCENE_ID, grid_size=1.0)
     eyes = BotEyes(model_name="qwen3-vl:4b")
     memory = MemoryBank(filename=SAVE_FILE)
 
     try:
             # initialize step counter
-            print("--- 初始全景扫描 ---")
             for _ in range(4):
                 body.move("RotateRight")
                 process_step(body, eyes, memory, "RotateRight", step_count)
                 step_count += 1
 
-            # 主循环：智能探索
+            # loop body: explore until max steps
             while step_count < MAX_EXPLORE_STEPS:
-                print(f"\n--- 探索进度 {step_count + 1}/{MAX_EXPLORE_STEPS} ---")
                 
-                # 1. 尝试向前走
+                # 1. try move forward
                 success, msg = body.move("MoveAhead")
                 
                 if success:
-                    # 走通了
                     process_step(body, eyes, memory, "MoveAhead", step_count)
                     step_count += 1
                     
-                    # 2. 走通后，偶尔左右看看（增加覆盖率）
-                    if step_count % 3 == 0: # 每3步看一次
+                    # 2. if is successful, randomly look around
+                    if step_count % 3 == 0: # every 3 steps
                         look_action = random.choice(["RotateRight", "RotateLeft"])
-                        print(f"  > 顺便看看旁边 ({look_action})...")
                         body.move(look_action)
                         process_step(body, eyes, memory, look_action, step_count)
                         step_count += 1
                         
-                        # 看完得转回来
+                        # back to original direction
                         back_action = "RotateLeft" if look_action == "RotateRight" else "RotateRight"
                         body.move(back_action)
-                        # 转回来的动作通常不需要记录为新节点，或者也可以记录
                 
                 else:
-                    # 3. 撞墙了
-                    print(f"⚠️ 前方受阻 -> 触发避障转向")
+                    # 3. if hit the wall
                     turn_action = random.choice(["RotateRight", "RotateLeft"])
                     body.move(turn_action)
                     process_step(body, eyes, memory, turn_action, step_count)
                     step_count += 1
                     
-                    # 撞墙后通常需要多转一下确认方向
+                    # simple anti-stuck: turn again
                     body.move(turn_action)
                     process_step(body, eyes, memory, turn_action, step_count)
                     step_count += 1
