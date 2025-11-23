@@ -7,6 +7,34 @@ from core.bot_memory import MemoryBank
 SCENE_ID = "FloorPlan10"   # must match the scene used in build_map.py
 MEMORY_FILE = "memory.json"
 
+def is_opposite(act1, act2):
+    """
+    check if two actions are opposites
+    """
+    pairs = {
+        ("RotateRight", "RotateLeft"), 
+        ("RotateLeft", "RotateRight"),
+        ("MoveAhead", "MoveBack")
+    }
+    return (act1, act2) in pairs
+
+def optimize_path(raw_nodes):
+    """
+    path optimization to remove redundant actions
+    """
+    optimized_actions = []
+    
+    actions = [node['action_to_here'] for node in raw_nodes if node['action_to_here'] != "Start"]
+    
+    # optimize by removing opposite actions (pair cancellation)
+    for action in actions:
+        if optimized_actions and is_opposite(optimized_actions[-1], action):
+            optimized_actions.pop()
+        else:
+            optimized_actions.append(action)
+                
+    return optimized_actions
+
 def run_find():
     print(f'=== 老弟，启动! (场景: {SCENE_ID}) ===')
     
@@ -37,7 +65,7 @@ def run_find():
             
             if not target:
                 print("你没说话，任务取消。")
-                return
+                continue
 
             # 4. read memory from JSON and search for the target
             print(f"Searching memory for '{target}'...")
@@ -47,31 +75,24 @@ def run_find():
             
             if target_node_id == -1:
                 print("抱歉，我的记忆里没有关于这个物品的线索。")
-                return
+                continue
 
             print(f"\n目标物品【{target}】可能在附近。")
             print("开始规划路径并移动...")
             
             # 5. Action Replay
             # get path to target
-            path_to_target = memory.history[:target_node_id+1]
+            raw_path = memory.history[:target_node_id+1]
+            path_to_target = optimize_path(raw_path)
+
+            for i, action in enumerate(path_to_target): 
+                success, msg = body.move(action)   
             
-            for node in path_to_target:
-                action = node['action_to_here']
-                step_id = node['node_id']
-                
-                # "Start" means no movement needed
-                if action == "Start":
-                    continue
-                    
-                print(f"\n  >正在前往节点 {step_id} (执行: {action})")
-                success, msg = body.move(action)
-                
                 if not success:
                     print(f"Error: 路径执行意外失败: {msg}")
                     break
-                
-                time.sleep(1) 
+                    
+                time.sleep(0.5) 
 
             # 6. Final confirmation
             print(f"\n老弟找到了！")
