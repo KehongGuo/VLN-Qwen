@@ -52,6 +52,8 @@ def run_scan():
     eyes = BotEyes(model_name="qwen3-vl:4b")
     memory = MemoryBank(filename=SAVE_FILE)
 
+    step_count = 0
+    
     try:
             # initialize step counter
             for _ in range(4):
