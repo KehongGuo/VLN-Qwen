@@ -71,7 +71,7 @@ def run_find():
             print(f"Searching memory for '{target}'...")
             target_node_id, reasoning = memory.search(target, eyes)
             
-            print(f"\n[]:\n{reasoning}")
+            print(f"\n{reasoning}")
             
             if target_node_id == -1:
                 print("抱歉，我的记忆里没有关于这个物品的线索。")
