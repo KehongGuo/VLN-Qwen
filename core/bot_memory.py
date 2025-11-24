@@ -73,7 +73,7 @@ class MemoryBank:
             if candidates:
                 # If multiple matches, return the most closest one
                 best_node = candidates[0] 
-                return best_node, f"⚡ [Fast Match] Found exact keyword '{query}' in Node {best_node}."
+                return best_node, f"Found exact keyword '{query}' in Node {best_node}."
                 
             return -1, None
 
