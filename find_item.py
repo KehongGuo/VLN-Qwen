@@ -22,18 +22,18 @@ def optimize_path(raw_nodes):
     """
     path optimization to remove redundant actions
     """
-    optimized_actions = []
-    
     actions = [node['action_to_here'] for node in raw_nodes if node['action_to_here'] != "Start"]
-    
-    # optimize by removing opposite actions (pair cancellation)
-    for action in actions:
-        if optimized_actions and is_opposite(optimized_actions[-1], action):
-            optimized_actions.pop()
-        else:
-            optimized_actions.append(action)
-                
-    return optimized_actions
+    return actions
+
+    # --- optimize by removing opposite actions (pair cancellation) ---
+    # optimized_actions = []
+    # actions = [node['action_to_here'] for node in raw_nodes if node['action_to_here'] != "Start"]
+    # for action in actions:
+    #     if optimized_actions and is_opposite(optimized_actions[-1], action):
+    #         optimized_actions.pop()
+    #     else:
+    #         optimized_actions.append(action)
+    # return optimized_actions
 
 def run_find():
     print(f'=== 老弟，启动! (场景: {SCENE_ID}) ===')

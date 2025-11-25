@@ -21,8 +21,6 @@ def parse_action(response_text):
         if f"Action: {action}" in response_text:
             return action
             
-# ----- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  -----
-# 这里想优化一下，做更智能的解析
     # 2. Fallback: look for keywords in the text
     if "MoveAhead" in response_text: return "MoveAhead"
     if "RotateRight" in response_text: return "RotateRight"
